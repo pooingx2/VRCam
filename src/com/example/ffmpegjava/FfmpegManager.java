@@ -121,6 +121,9 @@ public class FfmpegManager {
 					if (sc != null)
 						sc.shellOut(line);
 
+				if(type.equals("OUTPUT")) {
+					sc.processComplete(0);
+				}
 			} catch (IOException ioe){
 				ioe.printStackTrace();
 			}
