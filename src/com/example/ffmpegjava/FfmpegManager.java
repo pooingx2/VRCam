@@ -18,9 +18,7 @@ public class FfmpegManager {
 	private final static String TAG = "FFMPEG";
 	private String ffmpegBin;
 
-	public FfmpegManager() {
-
-	}
+	public FfmpegManager() {	}
 
 	public File getAlbumStorageDir(String albumName) {
 		File file = new File(Environment.getExternalStoragePublicDirectory(
@@ -56,6 +54,7 @@ public class FfmpegManager {
 		}
 	}
 
+	// 리소스의 raw디렉토리의 binary파일을 복사하고 퍼미션 설정
 	public void copyRawFile(Context ctx, int resid, File file, String mode) throws IOException, InterruptedException {
 		
 		Log.d(TAG,"Copy Binalry file");
@@ -73,6 +72,7 @@ public class FfmpegManager {
 		Runtime.getRuntime().exec("chmod " + mode + " " + abspath).waitFor();
 	}
 
+	// 명령어 수행 메소드
 	public int execProcess(String cmd, ShellCallback sc) throws IOException, InterruptedException {		
 
 		int exitVal = 0;
@@ -81,16 +81,15 @@ public class FfmpegManager {
 		sc.shellOut(cmd);
 
 		try{
+			// 실제 런타임에서 바이너리 파일을 통해 실행
 			Process p = Runtime.getRuntime().exec(cmd);
 
+			// 명령어 수행시 callback 메소드를 thread로 호출
 			StreamThread error = new StreamThread( p.getErrorStream(), "ERROR", sc);
 			StreamThread output = new StreamThread(p.getInputStream(), "OUTPUT", sc);
 
 			error.start();
 			output.start();
-
-			//exitVal = p.waitFor();
-			//sc.processComplete(exitVal);
 
 		}catch(Exception e){
 			System.out.println(e);
@@ -120,7 +119,8 @@ public class FfmpegManager {
 				while ( (line = br.readLine()) != null)
 					if (sc != null)
 						sc.shellOut(line);
-
+				
+				// 정상적으로 종료된 경우 
 				if(type.equals("OUTPUT")) {
 					sc.processComplete(0);
 				}
