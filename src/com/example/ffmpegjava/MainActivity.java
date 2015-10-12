@@ -123,7 +123,7 @@ public class MainActivity extends Activity {
 				+ " -i "
 				+ rightFilePath
 				+ " -filter_complex "
-				+ "[0:v]pad=iw*2:ih[int];[int][1:v]overlay=W/2:0[vid] "
+				+ "[0:v]transpose=1,pad=iw*2:ih[left];[1:v]transpose=1[right];[left][right]overlay=W/2:0[vid] "
 				+ "-map [vid] -map 0:a -c:v libx264 -crf 23 -preset ultrafast -c:a copy "
 				+ resultFilePath; 
 
